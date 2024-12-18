@@ -63,7 +63,7 @@ import { gettingStartedCheckedCodicon, gettingStartedUncheckedCodicon } from './
 import { GettingStartedInput } from './gettingStartedInput.js';
 import { IResolvedWalkthrough, IResolvedWalkthroughStep, IWalkthroughsService, hiddenEntriesConfigurationKey, parseDescription } from './gettingStartedService.js';
 import { RestoreWalkthroughsConfigurationValue, restoreWalkthroughsConfigurationKey } from './startupPage.js';
-import { startEntries } from '../common/gettingStartedContent.js';
+import { startEntries, templateEntries } from '../common/gettingStartedContent.js';
 import { GroupDirection, GroupsOrder, IEditorGroup, IEditorGroupsService } from '../../../services/editor/common/editorGroupsService.js';
 import { IExtensionService } from '../../../services/extensions/common/extensions.js';
 import { IHostService } from '../../../services/host/browser/host.js';
@@ -89,6 +89,14 @@ export interface IWelcomePageStartEntry {
 	when: ContextKeyExpression;
 }
 
+export interface IWelcomePageTemplateEntry {
+	id: string;
+	title: string;
+	description: string;
+	tags: string[];
+	editorUrl: string;
+}
+
 const parsedStartEntries: IWelcomePageStartEntry[] = startEntries.map((e, i) => ({
 	command: e.content.command,
 	description: e.description,
@@ -97,6 +105,14 @@ const parsedStartEntries: IWelcomePageStartEntry[] = startEntries.map((e, i) => 
 	order: i,
 	title: e.title,
 	when: ContextKeyExpr.deserialize(e.when) ?? ContextKeyExpr.true()
+}));
+
+const parsedTemplateEntries: IWelcomePageTemplateEntry[] = templateEntries.map((e, i) => ({
+	id: e.id,
+	title: e.title,
+	description: e.description,
+	tags: e.tags,
+	editorUrl: e.editorUrl
 }));
 
 type GettingStartedActionClassification = {
@@ -150,6 +166,7 @@ export class GettingStartedPage extends EditorPane {
 	private hasScrolledToFirstCategory = false;
 	private recentlyOpenedList?: GettingStartedIndexList<RecentEntry>;
 	private startList?: GettingStartedIndexList<IWelcomePageStartEntry>;
+	private templateList?: GettingStartedIndexList<IWelcomePageTemplateEntry>;
 	private gettingStartedList?: GettingStartedIndexList<IResolvedWalkthrough>;
 
 	private stepsSlide!: HTMLElement;
@@ -831,15 +848,19 @@ export class GettingStartedPage extends EditorPane {
 
 		const header = $('.header', {},
 			$('h1.product-name.caption', {}, this.productService.nameLong),
-			$('p.subtitle.description', {}, localize({ key: 'gettingStarted.editingEvolved', comment: ['Shown as subtitle on the Welcome page.'] }, "Editing evolved"))
+			$('p.subtitle.description', {}, localize({ key: 'gettingStarted.withEasyCodeAI', comment: ['Shown as subtitle on the Welcome page.'] }, "Getting Started with EasyCode AI"))
 		);
 
 		const leftColumn = $('.categories-column.categories-column-left', {},);
 		const rightColumn = $('.categories-column.categories-column-right', {},);
 
 		const startList = this.buildStartList();
+		const templateList = this.buildTemplateList();
 		const recentList = this.buildRecentlyOpenedList();
 		const gettingStartedList = this.buildGettingStartedWalkthroughsList();
+
+		const template = $('.template', {},);
+		reset(template, templateList.getDomElement());
 
 		const footer = $('.footer', {},
 			$('p.showOnStartup', {},
@@ -874,7 +895,7 @@ export class GettingStartedPage extends EditorPane {
 		gettingStartedList.onDidChange(layoutLists);
 		layoutLists();
 
-		reset(this.categoriesSlide, $('.gettingStartedCategoriesContainer', {}, header, leftColumn, rightColumn, footer,));
+		reset(this.categoriesSlide, $('.gettingStartedCategoriesContainer', {}, header, leftColumn, rightColumn, template, footer,));
 		this.categoriesPageScrollbar?.scanDomNode();
 
 		this.updateCategoryProgress();
@@ -1033,6 +1054,36 @@ export class GettingStartedPage extends EditorPane {
 		startList.setEntries(parsedStartEntries);
 		startList.onDidChange(() => this.registerDispatchListeners());
 		return startList;
+	}
+
+	private buildTemplateList(): GettingStartedIndexList<IWelcomePageTemplateEntry> {
+		const renderTemplateEntry = (entry: IWelcomePageTemplateEntry): HTMLElement =>
+			$('div',
+				{ class: 'element' },
+				$('div', { class: 'title' }, entry.title),
+				$('div', { class: 'description' }, entry.description),
+				$('div',
+					{ class: 'tags' },
+					...entry.tags.map(tag =>
+						$('span', { class: 'tag' }, tag)
+					)
+				)
+			);
+
+		if (this.startList) { this.startList.dispose(); }
+
+		const templateList = this.templateList = new GettingStartedIndexList(
+			{
+				title: 'Template',
+				klass: 'template-container',
+				limit: 10,
+				renderElement: renderTemplateEntry,
+				contextService: this.contextService
+			});
+
+		templateList.setEntries(parsedTemplateEntries);
+		templateList.onDidChange(() => console.log('open template'));
+		return templateList;
 	}
 
 	private buildGettingStartedWalkthroughsList(): GettingStartedIndexList<IResolvedWalkthrough> {
