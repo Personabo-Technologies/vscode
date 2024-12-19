@@ -19,6 +19,7 @@ type GettingStartedIndexListOptions<T> = {
 	footer?: HTMLElement | undefined;
 	renderElement: (item: T) => HTMLElement;
 	rankElement?: (item: T) => number | null;
+	clickElement?: (item: T) => void;
 	contextService: IContextKeyService;
 };
 
@@ -129,6 +130,11 @@ export class GettingStartedIndexList<T extends { id: string; when?: ContextKeyEx
 		this.itemCount = limitedEntries.length;
 		for (const entry of limitedEntries) {
 			const rendered = this.options.renderElement(entry);
+			if (this.options.clickElement) {
+				rendered.addEventListener('click', () => {
+					this.options.clickElement!(entry);
+				});
+			}
 			this.list.appendChild(rendered);
 		}
 

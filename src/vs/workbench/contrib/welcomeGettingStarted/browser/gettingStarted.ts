@@ -72,6 +72,7 @@ import { GettingStartedIndexList } from './gettingStartedList.js';
 import { AccessibilityVerbositySettingId } from '../../accessibility/browser/accessibilityConfiguration.js';
 import { AccessibleViewAction } from '../../accessibility/browser/accessibleViewActions.js';
 import { KeybindingLabel } from '../../../../base/browser/ui/keybindingLabel/keybindingLabel.js';
+import { ISandboxPreviewService } from '../../sandbox/browser/sandboxPage.js';
 
 const SLIDE_TRANSITION_TIME_MS = 250;
 const configurationKey = 'workbench.startupEditor';
@@ -206,6 +207,7 @@ export class GettingStartedPage extends EditorPane {
 		@IHostService private readonly hostService: IHostService,
 		@IWebviewService private readonly webviewService: IWebviewService,
 		@IWorkspaceContextService private readonly workspaceContextService: IWorkspaceContextService,
+		@ISandboxPreviewService private readonly sandboxPreviewService: ISandboxPreviewService,
 		@IAccessibilityService private readonly accessibilityService: IAccessibilityService
 	) {
 
@@ -1070,7 +1072,7 @@ export class GettingStartedPage extends EditorPane {
 				)
 			);
 
-		if (this.startList) { this.startList.dispose(); }
+		if (this.templateList) { this.templateList.dispose(); }
 
 		const templateList = this.templateList = new GettingStartedIndexList(
 			{
@@ -1078,7 +1080,10 @@ export class GettingStartedPage extends EditorPane {
 				klass: 'template-container',
 				limit: 10,
 				renderElement: renderTemplateEntry,
-				contextService: this.contextService
+				contextService: this.contextService,
+				clickElement: (entry) => {
+					this.sandboxPreviewService.openPreview();
+				}
 			});
 
 		templateList.setEntries(parsedTemplateEntries);
