@@ -1082,7 +1082,7 @@ export class GettingStartedPage extends EditorPane {
 				renderElement: renderTemplateEntry,
 				contextService: this.contextService,
 				clickElement: (entry) => {
-					this.sandboxPreviewService.openPreview();
+					this.sandboxPreviewService.initialize(entry);
 				}
 			});
 

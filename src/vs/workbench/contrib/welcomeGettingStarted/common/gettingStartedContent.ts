@@ -219,7 +219,7 @@ export const startEntries: GettingStartedStartEntryContent = [
 
 export const templateEntries: GettingStartedTemplateEntryContent = [
 	{
-		'id': 'react-vite-ts',
+		'id': '9qputt',
 		'title': 'React (TS)',
 		'description': 'Quickest way to get started with a React application',
 		'editorUrl': 'https://codesandbox.io/s/github/codesandbox/sandbox-templates/tree/main/react-vite-ts',
@@ -233,7 +233,7 @@ export const templateEntries: GettingStartedTemplateEntryContent = [
 		]
 	},
 	{
-		'id': 'python',
+		'id': 'in2qez',
 		'title': 'Python',
 		'description': 'The starter template of Python for CodeSandbox',
 		'editorUrl': 'https://codesandbox.io/s/github/codesandbox/sandbox-templates/tree/main/python',
@@ -245,7 +245,7 @@ export const templateEntries: GettingStartedTemplateEntryContent = [
 		]
 	},
 	{
-		'id': 'nextjs',
+		'id': 'fxis37',
 		'title': 'Next.js',
 		'description': 'The official Next.js template by the CodeSandbox team',
 		'editorUrl': 'https://codesandbox.io/s/github/codesandbox/sandbox-templates/tree/main/nextjs',
@@ -285,7 +285,7 @@ export const templateEntries: GettingStartedTemplateEntryContent = [
 		]
 	},
 	{
-		'id': 'node',
+		'id': 'k8dsq1',
 		'title': 'Node.js',
 		'description': 'The official Node.js template by the CodeSandbox team',
 		'editorUrl': 'https://codesandbox.io/s/github/codesandbox/sandbox-templates/tree/main/node',

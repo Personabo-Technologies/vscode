@@ -12,11 +12,17 @@ import { IWebviewService } from '../../webview/browser/webview.js';
 import { WebviewInput } from '../../webviewPanel/browser/webviewEditorInput.js';
 import { WebviewIconManager } from '../../webviewPanel/browser/webviewIconManager.js';
 import { InstantiationType, registerSingleton } from '../../../../platform/instantiation/common/extensions.js';
+import { IExtensionService } from '../../../services/extensions/common/extensions.js';
+import { IWelcomePageTemplateEntry } from '../../welcomeGettingStarted/browser/gettingStarted.js';
+import { ICommandService } from '../../../../platform/commands/common/commands.js';
+import { INotificationService } from '../../../../platform/notification/common/notification.js';
+import { IProgressService } from '../../../../platform/progress/common/progress.js';
 
 export const ISandboxPreviewService = createDecorator<ISandboxPreviewService>('sandboxPreviewService');
 export interface ISandboxPreviewService {
 	readonly _serviceBrand: undefined;
-	openPreview(): Promise<void>;
+	initialize(template: IWelcomePageTemplateEntry): Promise<void>;
+	openPreview(sandboxUrl: string): Promise<void>;
 }
 
 
@@ -25,23 +31,88 @@ export class SandboxPreviewContribution extends Disposable implements IWorkbench
 	static readonly ID = 'workbench.contrib.sandboxPreview';
 
 	constructor(
+		@ICommandService private readonly commandService: ICommandService,
 		@IEditorService private readonly editorService: IEditorService,
+		@IExtensionService private readonly extensionService: IExtensionService,
+		@IInstantiationService private readonly instantiationService: IInstantiationService,
 		@ILifecycleService private readonly lifecycleService: ILifecycleService,
+		@INotificationService private readonly notificationService: INotificationService,
 		@IWebviewService private readonly webviewService: IWebviewService,
-		@IInstantiationService private readonly instantiationService: IInstantiationService
+		@IProgressService private readonly progressService: IProgressService,
 	) {
 		super();
-		this.initialize();
 	}
 
-	private async initialize() {
-		// Wait for resolving startup editor until we are restored to reduce startup pressure
+	withTimeout<T>(promise: Promise<T>, ms: number, errorMessage: string): Promise<T> {
+		const timeout = new Promise<never>((_, reject) => {
+			setTimeout(() => {
+				reject(new Error(errorMessage));
+			}, ms);
+		});
+
+		return Promise.race([promise, timeout]);
+	}
+
+	async initialize(template: IWelcomePageTemplateEntry) {
 		await this.lifecycleService.when(LifecyclePhase.Restored);
-		// DO NOT OPEN on startup
-		// this.openPreview();
+
+		const extensionId = 'EasyCodeAI.chatgpt-gpt4-gpt3-vscode';
+		const extensionName = 'ChatGPT - EasyCode';
+		const extension = await this.extensionService.getExtension(extensionId);
+		if (extension) {
+			const openTask = async () => {
+				try {
+					const result = await this.commandService.executeCommand('easycode.openPreview', {
+						template: template.id,
+						title: template.title,
+						description: template.description
+					});
+					const sandbox = result.sandbox;
+
+					switch (result.status) {
+						case 'success':
+							if (!sandbox.sandbox_id || !sandbox.sandbox_url) {
+								this.notificationService.error(`Open template ${template.title} failed, cause: ${result.message || ''}`);
+							} else {
+								await this.openPreview(result.sandbox.sandbox_url);
+							}
+							break;
+						case 'unauthorized':
+							this.notificationService.info('Please login to EasyCode to use this feature.');
+							break;
+						case 'error':
+							this.notificationService.error(`Open template error: ${result.message}`);
+							break;
+					}
+				} catch (error) {
+					this.notificationService.error(`Failed to open template: ${error}`);
+				}
+			};
+
+			await this.progressService.withProgress(
+				{
+					location: 15,
+					title: `Opening template ${template.title}`,
+					cancellable: false
+				},
+				async () => this.withTimeout(
+					openTask(),
+					10000,
+					'Operation timed out after 10 seconds'
+				)
+			);
+		} else {
+			this.commandService.executeCommand(
+				'workbench.extensions.search',
+				extensionName
+			);
+			this.notificationService.info(
+				`Please install ${extensionName} extension to use this feature.`
+			);
+		}
 	}
 
-	async openPreview(): Promise<void> {
+	async openPreview(sandboxUrl: string): Promise<void> {
 		const webview = this.webviewService.createWebviewOverlay({
 			providedViewType: 'easycode.Sandbox.preview',
 			title: 'EasyCode Sandbox Preview',
@@ -83,7 +154,7 @@ export class SandboxPreviewContribution extends Disposable implements IWorkbench
 				</style>
 			</head>
 			<body>
-				<iframe src="https://g4wyzy-4321.csb.app" frameborder="0"></iframe>
+				<iframe src="${sandboxUrl}" frameborder="0"></iframe>
 			</body>
 		</html>
 		`);
