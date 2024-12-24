@@ -13,10 +13,10 @@ import { WebviewInput } from '../../webviewPanel/browser/webviewEditorInput.js';
 import { WebviewIconManager } from '../../webviewPanel/browser/webviewIconManager.js';
 import { InstantiationType, registerSingleton } from '../../../../platform/instantiation/common/extensions.js';
 import { IExtensionService } from '../../../services/extensions/common/extensions.js';
-import { IWelcomePageTemplateEntry } from '../../welcomeGettingStarted/browser/gettingStarted.js';
 import { ICommandService } from '../../../../platform/commands/common/commands.js';
 import { INotificationService } from '../../../../platform/notification/common/notification.js';
 import { IProgressService } from '../../../../platform/progress/common/progress.js';
+import { IWelcomePageTemplateEntry } from '../../welcomeEasyCodeGettingStarted/browser/easycodeGettingStarted.js';
 
 export const ISandboxPreviewService = createDecorator<ISandboxPreviewService>('sandboxPreviewService');
 export interface ISandboxPreviewService {

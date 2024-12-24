@@ -26,6 +26,7 @@ function createWorkspaceFile(workspacePath: string): string {
 		],
 		settings: {
 			'workbench.startupEditor': 'none',
+			'workbench.easycodeStartupEditor': 'none',
 			'workbench.enableExperiments': false,
 			'typescript.disableAutomaticTypeAcquisition': true,
 			'json.schemaDownload.enable': false,

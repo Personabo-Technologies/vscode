@@ -33,6 +33,11 @@ export namespace Schemas {
 	export const walkThrough = 'walkThrough';
 
 	/**
+	 * A easycode walk-through document.
+	 */
+	export const easycodeWalkThrough = 'easycodeWalkThrough';
+
+	/**
 	 * An embedded code snippet.
 	 */
 	export const walkThroughSnippet = 'walkThroughSnippet';
