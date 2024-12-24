@@ -23,7 +23,7 @@ import { IInstantiationService } from '../../../../platform/instantiation/common
 import { IProductService } from '../../../../platform/product/common/productService.js';
 import { IStorageService, StorageScope, StorageTarget, WillSaveStateReason } from '../../../../platform/storage/common/storage.js';
 import { ITelemetryService } from '../../../../platform/telemetry/common/telemetry.js';
-import { defaultToggleStyles } from '../../../../platform/theme/browser/defaultStyles.js';
+import { defaultInputBoxStyles, defaultToggleStyles } from '../../../../platform/theme/browser/defaultStyles.js';
 import { IWorkspaceContextService, UNKNOWN_EMPTY_WINDOW_WORKSPACE } from '../../../../platform/workspace/common/workspace.js';
 import { EditorPane } from '../../../browser/parts/editor/editorPane.js';
 import { IEditorOpenContext, IEditorSerializer } from '../../../common/editor.js';
@@ -35,6 +35,8 @@ import { IEditorGroup, IEditorGroupsService } from '../../../services/editor/com
 import { IWorkbenchThemeService } from '../../../services/themes/common/workbenchThemeService.js';
 import { EasyCodeGettingStartedIndexList } from './easycodeGettingStartedList.js';
 import { ISandboxPreviewService } from '../../sandbox/browser/sandboxPage.js';
+import { InputBox } from '../../../../base/browser/ui/inputbox/inputBox.js';
+import { IContextViewService } from '../../../../platform/contextview/browser/contextView.js';
 
 const configurationKey = 'workbench.easycodeStartupEditor';
 
@@ -105,6 +107,7 @@ export class EasyCodeGettingStartedPage extends EditorPane {
 		@IStorageService private storageService: IStorageService,
 		@IEditorGroupsService private readonly groupsService: IEditorGroupsService,
 		@IContextKeyService contextService: IContextKeyService,
+		@IContextViewService private readonly contextViewService: IContextViewService,
 		@IWorkspaceContextService private readonly workspaceContextService: IWorkspaceContextService,
 		@ISandboxPreviewService private readonly sandboxPreviewService: ISandboxPreviewService,
 		@IAccessibilityService private readonly accessibilityService: IAccessibilityService
@@ -233,8 +236,11 @@ export class EasyCodeGettingStartedPage extends EditorPane {
 			$('p.subtitle.description', {}, localize({ key: 'gettingStarted.withEasyCodeAI', comment: ['Shown as subtitle on the Welcome page.'] }, "Getting Started with EasyCode AI"))
 		);
 
-		const templateList = this.buildTemplateList();
+		const promptElement = this.buildPromptEditor();
+		const prompt = $('.prompt', {},);
+		reset(prompt, promptElement);
 
+		const templateList = this.buildTemplateList();
 		const template = $('.template', {},);
 		reset(template, templateList.getDomElement());
 
@@ -245,10 +251,30 @@ export class EasyCodeGettingStartedPage extends EditorPane {
 			));
 
 
-		reset(this.categoriesSlide, $('.gettingStartedCategoriesContainer', {}, header, template, footer,));
+		reset(this.categoriesSlide, $('.gettingStartedCategoriesContainer', {}, header, prompt, template, footer,));
 		this.categoriesPageScrollbar?.scanDomNode();
 
 		this.setSlide('categories');
+	}
+
+	private buildPromptEditor(): HTMLElement {
+		const promptContainer = $('.prompt-container');
+		const inputBox = new InputBox(promptContainer, this.contextViewService, {
+			placeholder: localize('easycodePromptPlaceholder', "Please input prompt..."),
+			ariaLabel: localize('promptInput', "EasyCode Prompt Editor"),
+			type: 'textarea',
+			flexibleHeight: true,
+			inputBoxStyles: defaultInputBoxStyles,
+			flexibleMaxHeight: 120
+		});
+
+
+		this.categoriesSlideDisposables.add(inputBox);
+		this.categoriesSlideDisposables.add(inputBox.onDidChange(value => {
+			console.log('Prompt changed:', value);
+		}));
+
+		return promptContainer;
 	}
 
 	private buildTemplateList(): EasyCodeGettingStartedIndexList<IWelcomePageTemplateEntry> {

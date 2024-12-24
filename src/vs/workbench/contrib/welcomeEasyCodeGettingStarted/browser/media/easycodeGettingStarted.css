@@ -109,10 +109,11 @@
 	height: 100%;
 	max-width: 1200px;
 	margin: 0 auto;
-	grid-template-rows: 25% minmax(min-content, auto) min-content;
+	grid-template-rows: 25% min-content minmax(min-content, auto) min-content;
 	grid-template-columns: 1fr 6fr 1fr 6fr 1fr;
 	grid-template-areas:
 		".  header header header ."
+		". prompt prompt prompt ."
 		". template template template ."
 		". footer footer footer .";
 }
@@ -120,18 +121,18 @@
 .monaco-workbench .part.editor > .content .easycodeGettingStartedContainer.width-constrained .gettingStartedSlideCategories > .gettingStartedCategoriesContainer {
 	grid-template-rows: auto min-content minmax(min-content, auto) min-content;
 	grid-template-columns: 1fr;
-	grid-template-areas: "header" "template" "footer";
+	grid-template-areas: "header" "prompt" "template" "footer";
 }
 
 .monaco-workbench .part.editor > .content .easycodeGettingStartedContainer.height-constrained .gettingStartedSlideCategories > .gettingStartedCategoriesContainer {
-	grid-template-rows: auto minmax(min-content, auto) min-content;
-	grid-template-areas: "header" "template" "footer footer";
+	grid-template-rows: auto min-content minmax(min-content, auto) min-content;
+	grid-template-areas: "header" "prompt" "template" "footer footer";
 }
 
 .monaco-workbench .part.editor > .content .easycodeGettingStartedContainer.height-constrained.width-constrained .gettingStartedSlideCategories > .gettingStartedCategoriesContainer {
-	grid-template-rows: minmax(min-content, auto) min-content;
+	grid-template-rows: min-content minmax(min-content, auto) min-content;
 	grid-template-columns: 1fr;
-	grid-template-areas: "template" "footer";
+	grid-template-areas: "prompt" "template" "footer";
 }
 
 .monaco-workbench .part.editor > .content .easycodeGettingStartedContainer.width-constrained .gettingStartedSlideCategories > .gettingStartedCategoriesContainer > .header, .monaco-workbench .part.editor > .content .easycodeGettingStartedContainer.height-constrained .gettingStartedSlideCategories > .gettingStartedCategoriesContainer > .header {
@@ -158,6 +159,16 @@
 .monaco-workbench .part.editor > .content .easycodeGettingStartedContainer .gettingStartedSlideCategories > .gettingStartedCategoriesContainer > .header {
 	grid-area: header;
 	align-self: end;
+}
+
+.monaco-workbench .part.editor > .content .easycodeGettingStartedContainer .gettingStartedSlideCategories > .gettingStartedCategoriesContainer > .prompt {
+	align-self: start;
+	grid-area: prompt;
+	margin-bottom: 30px;
+}
+
+.monaco-workbench .part.editor > .content .easycodeGettingStartedContainer .gettingStartedSlideCategories > .gettingStartedCategoriesContainer > .prompt > .prompt-container textarea {
+	height: 120px !important;
 }
 
 .monaco-workbench .part.editor > .content .easycodeGettingStartedContainer .gettingStartedSlideCategories > .gettingStartedCategoriesContainer > .template {
