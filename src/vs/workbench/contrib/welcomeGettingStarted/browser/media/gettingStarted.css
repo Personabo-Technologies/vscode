@@ -109,11 +109,10 @@
 	height: 100%;
 	max-width: 1200px;
 	margin: 0 auto;
-	grid-template-rows: 25% min-content minmax(min-content, auto) min-content;
+	grid-template-rows: 25% minmax(min-content, auto) min-content;
 	grid-template-columns: 1fr 6fr 1fr 6fr 1fr;
 	grid-template-areas:
 		".  header header header ."
-		". template template template ."
 		". left-column . right-column ."
 		". footer footer footer .";
 }
@@ -121,18 +120,18 @@
 .monaco-workbench .part.editor > .content .gettingStartedContainer.width-constrained .gettingStartedSlideCategories > .gettingStartedCategoriesContainer {
 	grid-template-rows: auto min-content minmax(min-content, auto) min-content;
 	grid-template-columns: 1fr;
-	grid-template-areas: "header" "template" "left-column" "right-column" "footer";
+	grid-template-areas: "header" "left-column" "right-column" "footer";
 }
 
 .monaco-workbench .part.editor > .content .gettingStartedContainer.height-constrained .gettingStartedSlideCategories > .gettingStartedCategoriesContainer {
-	grid-template-rows: auto min-content minmax(min-content, auto) min-content;
-	grid-template-areas: "header" "template template" "left-column right-column" "footer";
+	grid-template-rows: auto minmax(min-content, auto) min-content;
+	grid-template-areas: "header" "left-column right-column" "footer footer";
 }
 
 .monaco-workbench .part.editor > .content .gettingStartedContainer.height-constrained.width-constrained .gettingStartedSlideCategories > .gettingStartedCategoriesContainer {
-	grid-template-rows: min-content min-content minmax(min-content, auto) min-content;
+	grid-template-rows: min-content minmax(min-content, auto) min-content;
 	grid-template-columns: 1fr;
-	grid-template-areas: "template" "left-column" "right-column" "footer";
+	grid-template-areas: "left-column" "right-column" "footer";
 }
 
 .monaco-workbench .part.editor > .content .gettingStartedContainer.width-constrained .gettingStartedSlideCategories > .gettingStartedCategoriesContainer > .header, .monaco-workbench .part.editor > .content .gettingStartedContainer.height-constrained .gettingStartedSlideCategories > .gettingStartedCategoriesContainer > .header {
@@ -167,60 +166,6 @@
 .monaco-workbench .part.editor > .content .gettingStartedContainer .gettingStartedSlideCategories > .gettingStartedCategoriesContainer > .header {
 	grid-area: header;
 	align-self: end;
-}
-
-.monaco-workbench .part.editor > .content .gettingStartedContainer .gettingStartedSlideCategories > .gettingStartedCategoriesContainer > .template {
-	align-self: start;
-	grid-area: template;
-	margin-bottom: 30px;
-}
-
-.monaco-workbench .part.editor > .content .gettingStartedContainer .gettingStartedSlideCategories > .gettingStartedCategoriesContainer > .template > .template-container ul {
-	display: grid;
-	gap: 1rem;
-	overflow: hidden;
-	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-}
-
-.monaco-workbench .part.editor > .content .gettingStartedContainer .gettingStartedSlideCategories > .gettingStartedCategoriesContainer > .template .title {
-	margin: 0;
-	flex: none
-}
-
-.monaco-workbench .part.editor > .content .gettingStartedContainer .gettingStartedSlideCategories > .gettingStartedCategoriesContainer > .template .description {
-	flex: 1 100%;
-}
-
-.monaco-workbench .part.editor > .content .gettingStartedContainer .gettingStartedSlideCategories > .gettingStartedCategoriesContainer > .template .element {
-	display: flex;
-	flex-direction: column;
-	gap: 2px;
-	background: var(--vscode-welcomePage-tileHoverBackground);
-	padding: 5px 10px 10px 10px;
-	border-radius: 5px;
-	border: 1px solid transparent;
-}
-
-.monaco-workbench .part.editor > .content .gettingStartedContainer .gettingStartedSlideCategories > .gettingStartedCategoriesContainer > .template .element:hover {
-	border: 1px solid var(--vscode-welcomePage-tileBorder);
-	background: var(--vscode-welcomePage-tileBackground);
-	cursor: pointer;
-}
-
-.monaco-workbench .part.editor > .content .gettingStartedContainer .gettingStartedSlideCategories > .gettingStartedCategoriesContainer > .template .element .tags {
-	display: flex;
-	flex-wrap: wrap;
-	color: var(--vscode-descriptionForeground);
-	flex-direction: row;
-	gap: 5px;
-}
-
-.monaco-workbench .part.editor > .content .gettingStartedContainer .gettingStartedSlideCategories > .gettingStartedCategoriesContainer > .template .element .tags .tag {
-	border: 1px solid var(--vscode-welcomePage-tileBorder);
-	padding: 0px 3px;
-	font-size: smaller;
-	border-radius: 3px;
-	line-height: 16px;
 }
 
 .monaco-workbench .part.editor > .content .gettingStartedContainer .gettingStartedSlideCategories > .gettingStartedCategoriesContainer > .footer {
