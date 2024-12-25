@@ -37,6 +37,7 @@ import { EasyCodeGettingStartedIndexList } from './easycodeGettingStartedList.js
 import { ISandboxPreviewService } from '../../sandbox/browser/sandboxPage.js';
 import { InputBox } from '../../../../base/browser/ui/inputbox/inputBox.js';
 import { IContextViewService } from '../../../../platform/contextview/browser/contextView.js';
+import { TypewriterEffect } from './typeWriterEffect.js';
 
 const configurationKey = 'workbench.easycodeStartupEditor';
 
@@ -268,6 +269,10 @@ export class EasyCodeGettingStartedPage extends EditorPane {
 			flexibleMaxHeight: 120
 		});
 
+		new TypewriterEffect(inputBox, 'Create a ', [
+			'react native project...',
+			'nextjs project...'
+		]);
 
 		this.categoriesSlideDisposables.add(inputBox);
 		this.categoriesSlideDisposables.add(inputBox.onDidChange(value => {
