@@ -167,8 +167,31 @@
 	margin-bottom: 30px;
 }
 
+.monaco-workbench .part.editor > .content .easycodeGettingStartedContainer .gettingStartedSlideCategories > .gettingStartedCategoriesContainer > .prompt > .prompt-container {
+	position: relative;
+}
+
 .monaco-workbench .part.editor > .content .easycodeGettingStartedContainer .gettingStartedSlideCategories > .gettingStartedCategoriesContainer > .prompt > .prompt-container textarea {
 	height: 120px !important;
+}
+
+.monaco-workbench .part.editor > .content .easycodeGettingStartedContainer .gettingStartedSlideCategories > .gettingStartedCategoriesContainer > .prompt > .prompt-container .controller-wrapper {
+	display: flex;
+	justify-content: space-between;
+	flex-direction: row-reverse;
+	position: absolute;
+	bottom: 8px;
+	right: 8px;
+}
+
+.monaco-workbench .part.editor > .content .easycodeGettingStartedContainer .gettingStartedSlideCategories > .gettingStartedCategoriesContainer > .prompt > .prompt-container .controller-wrapper .send-button {
+	color: var(--vscode-button-foreground);
+	background: var(--vscode-button-background);
+	z-index: 1;
+}
+
+.monaco-workbench .part.editor > .content .easycodeGettingStartedContainer .gettingStartedSlideCategories > .gettingStartedCategoriesContainer > .prompt > .prompt-container .controller-wrapper .send-button:hover {
+	background: var(--vscode-button-hoverBackground);
 }
 
 .monaco-workbench .part.editor > .content .easycodeGettingStartedContainer .gettingStartedSlideCategories > .gettingStartedCategoriesContainer > .template {

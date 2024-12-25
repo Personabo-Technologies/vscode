@@ -261,13 +261,26 @@ export class EasyCodeGettingStartedPage extends EditorPane {
 	private buildPromptEditor(): HTMLElement {
 		const promptContainer = $('.prompt-container');
 		const inputBox = new InputBox(promptContainer, this.contextViewService, {
-			placeholder: localize('easycodePromptPlaceholder', "Please input prompt..."),
 			ariaLabel: localize('promptInput', "EasyCode Prompt Editor"),
 			type: 'textarea',
 			flexibleHeight: true,
 			inputBoxStyles: defaultInputBoxStyles,
 			flexibleMaxHeight: 120
 		});
+
+
+		this.categoriesSlideDisposables.add(addDisposableListener(inputBox.inputElement, 'keydown', (e: KeyboardEvent) => {
+			if (e.key === 'Enter') {
+				if (e.shiftKey) {
+					return;
+				}
+				e.preventDefault();
+				if (!inputBox.value.trim()) {
+					return;
+				}
+				console.log('Send prompt via enter key: ', inputBox.value);
+			}
+		}));
 
 		new TypewriterEffect(inputBox, 'Create a ', [
 			'react native project...',
@@ -278,6 +291,36 @@ export class EasyCodeGettingStartedPage extends EditorPane {
 		this.categoriesSlideDisposables.add(inputBox.onDidChange(value => {
 			console.log('Prompt changed:', value);
 		}));
+
+
+		const controllerWrapper = $('.controller-wrapper');
+		promptContainer.appendChild(controllerWrapper);
+
+		const button = $('.send-button', {
+			role: 'button',
+			title: 'Ask EasyCode AI'
+		});
+		button.classList.add('monaco-button', 'monaco-text-button');
+		const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+		svg.setAttribute('width', '16');
+		svg.setAttribute('height', '16');
+		svg.setAttribute('viewBox', '0 0 16 16');
+		svg.setAttribute('fill', 'currentColor');
+
+		const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+		path.setAttribute('d', 'M8.0001 1L15 8L8.0001 15L6.95297 13.9529L12.4059 8.5H1V7.5H12.4059L6.95297 2.04712L8.0001 1Z');
+
+		svg.appendChild(path);
+		button.appendChild(svg);
+
+		this.categoriesSlideDisposables.add(addDisposableListener(button, 'click', () => {
+			if (!inputBox.value.trim()) {
+				return;
+			}
+			console.log('Send prompt via click button:', inputBox.value);
+		}));
+
+		controllerWrapper.appendChild(button);
 
 		return promptContainer;
 	}
