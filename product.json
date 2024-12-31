@@ -91,6 +91,30 @@
 				},
 				"publisherDisplayName": "Microsoft"
 			}
+		},
+		{
+			"name": "ms-vscode-remote.remote-ssh",
+			"version": "0.113.1",
+			"repo": "https://github.com/Microsoft/vscode-remote-release",
+			"metadata": {
+				"id": "ms-vscode-remote.remote-ssh"
+			}
+		},
+		{
+			"name": "ms-vscode-remote.remote-ssh-edit",
+			"version": "0.87.0",
+			"repo": "https://github.com/Microsoft/vscode-remote-release",
+			"metadata": {
+				"id": "ms-vscode-remote.remote-ssh-edit"
+			}
+		},
+		{
+			"name": "ms-vscode.remote-explorer",
+			"version": "0.4.3",
+			"repo": "https://github.com/Microsoft/vscode-remote-release",
+			"metadata": {
+				"id": "ms-vscode.remote-explorer"
+			}
 		}
 	]
 }
