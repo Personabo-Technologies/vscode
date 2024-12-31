@@ -37,6 +37,11 @@
 	"requestFeatureUrl": "https://go.microsoft.com/fwlink/?LinkID=533482",
 	"webEndpointUrl": "https://code.visualstudio.com/sha",
 	"urlProtocol": "easycode-ai",
+	"extensionsGallery": {
+		"serviceUrl": "https://marketplace.visualstudio.com/_apis/public/gallery",
+		"cacheUrl": "https://vscode.blob.core.windows.net/gallery/index",
+		"itemUrl": "https://marketplace.visualstudio.com/items"
+	},
 	"webviewContentExternalBaseUrlTemplate": "https://{{uuid}}.vscode-cdn.net/insider/ef65ac1ba57f57f2a3961bfe94aa20481caca4c6/out/vs/workbench/contrib/webview/browser/pre/",
 	"builtInExtensions": [
 		{

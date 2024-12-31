@@ -1,0 +1,534 @@
+{
+  "name": "chatgpt-gpt4-gpt3-vscode",
+  "displayName": "ChatGPT - EasyCode",
+  "description": "ChatGPT with codebase understanding, web browsing, & GPT-4. No account or API key required.",
+  "version": "1.5.36",
+  "publisher": "EasyCodeAI",
+  "icon": "resources/old_extensionIcon.png",
+  "license": "MIT",
+  "repository": {
+    "url": "https://easycode.ai/"
+  },
+  "engines": {
+    "vscode": "^1.68.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "chatgpt",
+    "openai",
+    "gpt3",
+    "gpt4",
+    "copilot",
+    "ai",
+    "explain",
+    "debugging",
+    "code explanation",
+    "code generation",
+    "code summary",
+    "unit testing"
+  ],
+  "activationEvents": [
+    "onStartupFinished",
+    "onView:easycode.chatView",
+    "onCommand:easycode.ask",
+    "onCommand:easycode.fixBug",
+    "onCommand:easycode.explain",
+    "onCommand:easycode.explainFileFlow",
+    "onCommand:easycode.explainMethodFlow",
+    "onCommand:easycode.refactorCode",
+    "onCommand:easycode.writeUnitTests",
+    "onCommand:easycode.indexCodebase"
+  ],
+  "main": "./dist/main.extension.js",
+  "sideEffects": false,
+  "contributes": {
+    "commands": [
+      {
+        "command": "easycode.generateCommitMessage",
+        "title": "EasyCode: Create Commit Message"
+      },
+      {
+        "command": "easycode.ask",
+        "title": "Ask GPT"
+      },
+      {
+        "command": "easycode.fixBug",
+        "title": "Ask GPT: Fix Bug"
+      },
+      {
+        "command": "easycode.explain",
+        "title": "Ask GPT: What does this do?"
+      },
+      {
+        "command": "easycode.explainFileFlow",
+        "title": "Ask GPT: What does this file do?"
+      },
+      {
+        "command": "easycode.refactorCode",
+        "title": "Ask GPT: Refactor Code"
+      },
+      {
+        "command": "easycode.writeUnitTests",
+        "title": "Ask GPT: Write Unit Tests"
+      },
+      {
+        "command": "easycode.indexCodebase",
+        "title": "GPT: Index Codebase"
+      },
+      {
+        "command": "easycode.clearCache",
+        "title": "GPT: Clear Cache"
+      },
+      {
+        "command": "easyCode.cmdeTutorial",
+        "title": "GPT: Open CMD + E Tutorial"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "easycode.copyHook",
+        "key": "ctrl+c",
+        "mac": "cmd+c",
+        "when": "editorHasSelection"
+      },
+      {
+        "command": "easycode.addToContext",
+        "key": "ctrl+shift+c",
+        "mac": "cmd+shift+c"
+      },
+      {
+        "command": "easycode.diffWithGPT",
+        "key": "ctrl+e",
+        "mac": "cmd+e",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "easycode.submit",
+        "key": "ctrl+shift+enter",
+        "mac": "cmd+shift+enter"
+      },
+      {
+        "command": "easycode.focusExtension",
+        "key": "ctrl+shift+o",
+        "mac": "cmd+shift+o"
+      }
+    ],
+    "menus": {
+      "scm/title": [
+        {
+          "command": "easycode.generateCommitMessage",
+          "when": "scmProvider == git",
+          "group": "navigation@1"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "easycode.explainFileFlow",
+          "group": "easycode-menu-group@0"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "easycode.ask",
+          "when": "editorHasSelection",
+          "group": "easycode-menu-group@1"
+        },
+        {
+          "command": "easycode.fixBug",
+          "when": "editorHasSelection",
+          "group": "easycode-menu-group@2"
+        },
+        {
+          "command": "easycode.explain",
+          "when": "editorHasSelection",
+          "group": "easycode-menu-group@3"
+        },
+        {
+          "command": "easycode.explainFileFlow",
+          "when": "editorTextFocus && !editorHasSelection",
+          "group": "easycode-menu-group@6"
+        },
+        {
+          "command": "easycode.refactorCode",
+          "when": "editorHasSelection",
+          "group": "easycode-menu-group@7"
+        },
+        {
+          "command": "easycode.writeUnitTests",
+          "when": "editorHasSelection",
+          "group": "easycode-menu-group@8"
+        },
+        {
+          "command": "easycode.indexCodebase",
+          "when": "editorTextFocus",
+          "group": "easycode-menu-group@10"
+        },
+        {
+          "command": "easycode.clearCache",
+          "when": "editorTextFocus",
+          "group": "easycode-menu-group@13"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "easycode.ask"
+        },
+        {
+          "command": "easycode.explain",
+          "when": "editorHasSelection"
+        },
+        {
+          "command": "easycode.explainFileFlow",
+          "when": "editorHasSelection"
+        },
+        {
+          "command": "easycode.indexCodebase"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "easycode",
+          "title": "ChatGPT - EasyCode",
+          "icon": "resources/old_extensionIcon.png"
+        }
+      ]
+    },
+    "views": {
+      "easycode": [
+        {
+          "type": "webview",
+          "id": "easycode.chatView",
+          "name": "ChatGPT - EasyCode"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "ChatGPT - EasyCode",
+      "type": "object",
+      "properties": {
+        "easycode.model": {
+          "type": "string",
+          "enum": [
+            "gpt-4o",
+            "gpt-4o-mini",
+            "o1-mini",
+            "claude-3-5-sonnet-20241022",
+            "deepseek-coder",
+            "qwen2.5-coder-32b",
+            "qwq-32b-preview"
+          ],
+          "default": "qwen2.5-coder-32b",
+          "description": "Which ChatGPT model to use",
+          "order": 0
+        },
+        "easycode.maxTokens": {
+          "type": "number",
+          "maximum": 2000,
+          "default": 1024,
+          "description": "Maximum tokens to query the AI",
+          "order": 1
+        },
+        "easycode.temperature": {
+          "type": "number",
+          "default": 0,
+          "description": "Temperature to use for AI (0 is conservative and 1 is creative)",
+          "order": 2
+        },
+        "easycode.copyOnClick": {
+          "type": "boolean",
+          "default": true,
+          "description": "Copy the code from a codeblock into clipboard when you click on it",
+          "order": 3
+        },
+        "easycode.codeLens": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable CodeLens",
+          "order": 4
+        },
+        "easycode.globalChatContext": {
+          "type": "string",
+          "default": "",
+          "description": "An additional prompt to be added to a chat's overall context",
+          "order": 4
+        },
+        "easycode.promptPrefix.explain": {
+          "type": "string",
+          "default": "Explain what this code does: ",
+          "description": "The prompt prefix used for explaining the selected code",
+          "order": 5
+        },
+        "easycode.promptPrefix.explainHighLevel": {
+          "type": "string",
+          "default": "Explain how this code is used by other parts of the codebase: ",
+          "description": "The prompt prefix used for explaining the selected code on a high level",
+          "order": 6
+        },
+        "easycode.promptPrefix.explainFileFlow": {
+          "type": "string",
+          "default": "Explain what this file does and list its key functions:",
+          "description": "The prompt prefix used for explaining how files are used",
+          "order": 7
+        },
+        "easycode.promptPrefix.refactorCode": {
+          "type": "string",
+          "default": "Refactor this code:",
+          "description": "The prompt prefix used for refactoring code",
+          "order": 8
+        },
+        "easycode.promptPrefix.writeUnitTests": {
+          "type": "string",
+          "default": "Write unit tests for this code:",
+          "description": "The prompt prefix used for writing unit tests",
+          "order": 9
+        },
+        "easycode.userEmail": {
+          "type": "string",
+          "default": "",
+          "description": "Your user email",
+          "order": 10
+        },
+        "easycode.dataCollection": {
+          "type": "boolean",
+          "default": true,
+          "description": "Allow the extension to collect data",
+          "order": 11
+        },
+        "easycode.openAI ApiKey": {
+          "type": "string",
+          "default": "",
+          "description": "Your OpenAI Api Key",
+          "order": 12
+        },
+        "easycode.useOwnApiKey": {
+          "type": "boolean",
+          "default": false,
+          "description": "Use Your Own OpenAI Api Key",
+          "order": 13
+        },
+        "easycode.usePromptAssistant": {
+          "type": "boolean",
+          "default": true,
+          "description": "Use EasyCode Prompt Assistant",
+          "order": 14
+        },
+        "easycode.useActiveViewContext": {
+          "type": "boolean",
+          "default": false,
+          "description": "Automatically use code context from the current active editor view",
+          "order": 15
+        },
+        "easycode.showEasyCodePanelOnOpen": {
+          "type": "boolean",
+          "default": false,
+          "description": "Show the Easycode Panel when Visual Studio Code is opened",
+          "order": 16
+        }
+      }
+    },
+    "walkthroughs": [
+      {
+        "id": "welcome",
+        "title": "Getting Started with EasyCode",
+        "description": "Discover EasyCode features that users love.",
+        "steps": [
+          {
+            "id": "chatWithFiles",
+            "title": "Chat with Files or Entire Codebase",
+            "description": "Maximum control of context ➡️ Maximum precision.",
+            "media": {
+              "markdown": "walkthroughs/chatWithFiles.md"
+            }
+          },
+          {
+            "id": "cmde",
+            "title": "AI Quick Edit (⌘+E / ^+E)",
+            "description": "Refactor, add comments, error handling with AI. \n[Start Tutorial](command:easyCode.cmdeTutorial)",
+            "media": {
+              "markdown": "walkthroughs/cmd+e.md"
+            }
+          },
+          {
+            "id": "quickFix",
+            "title": "Quick fix lint errors",
+            "description": "Get fix suggestions in diff mode",
+            "media": {
+              "markdown": "walkthroughs/quickfix.md"
+            }
+          },
+          {
+            "id": "buildFeature",
+            "title": "Build Features with Multi-File Code Gen",
+            "description": "Generate boilerplate code across codebase.",
+            "media": {
+              "markdown": "walkthroughs/buildFeature.md"
+            }
+          },
+          {
+            "id": "planFeature",
+            "title": "Brainstorm Solutions with Codebase Context",
+            "description": "Quickly find out the Where and the How.",
+            "media": {
+              "markdown": "walkthroughs/planFeature.md"
+            }
+          },
+          {
+            "id": "learn-more",
+            "title": "Learn more",
+            "description": "More features. Get help. Discord community.",
+            "media": {
+              "markdown": "walkthroughs/learn-more.md"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "compile": "webpack",
+    "watch": "webpack --mode development --watch",
+    "watch-main": "node watch-main.js",
+    "package": "webpack --mode production",
+    "compile-tests": "tsc -p . --outDir out",
+    "watch-tests": "tsc -p . -w --outDir out",
+    "pretest": "npm run compile-tests && npm run compile && npm run lint",
+    "lint": "eslint src --ext ts,tsx",
+    "test": "node ./out/test/runTest.js",
+    "update-package-lock": "npm install --package-lock-only",
+    "postinstall": "patch-package"
+  },
+  "devDependencies": {
+    "@iconscout/react-unicons": "^2.0.2",
+    "@sentry/cli": "^2.19.4",
+    "@sentry/types": "^7.57.0",
+    "@sentry/webpack-plugin": "^2.4.0",
+    "@types/datadog-winston": "^1.0.7",
+    "@types/event-source-polyfill": "^1.0.1",
+    "@types/eventsource": "^1.1.11",
+    "@types/glob": "^8.0.0",
+    "@types/js-yaml": "^4.0.5",
+    "@types/lodash": "^4.14.195",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "16.x",
+    "@types/node-rsa": "^1.1.4",
+    "@types/react": "^18.2.18",
+    "@types/react-dom": "^18.2.7",
+    "@types/react-syntax-highlighter": "^15.5.7",
+    "@types/react-virtualized": "^9.21.27",
+    "@types/react-window": "^1.8.8",
+    "@types/tar": "^6.1.5",
+    "@types/uuid": "^9.0.2",
+    "@types/vscode": "~1.68.0",
+    "@types/vscode-1-75": "npm:@types/vscode@~1.75.0",
+    "@types/vscode-webview": "^1.57.1",
+    "@types/yauzl": "^2.10.3",
+    "@typescript-eslint/eslint-plugin": "^6.2.1",
+    "@typescript-eslint/parser": "^6.2.1",
+    "@vscode/test-electron": "^2.2.0",
+    "autoprefixer": "^10.4.14",
+    "css-loader": "^6.8.1",
+    "dotenv": "^16.3.1",
+    "esbuild-loader": "^4.0.0",
+    "eslint": "^8.28.0",
+    "eslint-import-resolver-typescript": "^3.5.5",
+    "eslint-plugin-import": "^2.28.0",
+    "eslint-plugin-react": "^7.33.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "file-loader": "^6.2.0",
+    "fork-ts-checker-webpack-plugin": "^8.0.0",
+    "glob": "^8.0.3",
+    "imports-loader": "^4.0.1",
+    "javascript-obfuscator": "^4.0.2",
+    "mini-css-extract-plugin": "^2.7.6",
+    "mocha": "^10.1.0",
+    "partial-json": "^0.1.4",
+    "patch-package": "^8.0.0",
+    "postcss": "^8.4.27",
+    "postcss-import": "^15.1.0",
+    "postcss-loader": "^7.3.3",
+    "tailwindcss": "^3.3.3",
+    "typescript": "^5.1.6",
+    "webpack": "^5.81.0",
+    "webpack-cli": "^5.0.0",
+    "webpack-node-externals": "^3.0.0",
+    "webpack-obfuscator": "^3.5.1"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.4.3",
+    "@arcsine/screen-recorder": "^0.2.9",
+    "@datadog/browser-logs": "^5.22.0",
+    "@datadog/browser-rum": "^5.23.0",
+    "@dqbd/tiktoken": "^0.2.1",
+    "@iconscout/react-unicons-thinline": "^0.0.1",
+    "@monaco-editor/react": "^4.6.0",
+    "@nextui-org/react": "^2.2.10",
+    "@reduxjs/toolkit": "^1.9.5",
+    "@sentry/browser": "^7.57.0",
+    "@sentry/integrations": "^7.57.0",
+    "@sentry/node": "^7.50.0",
+    "@sentry/react": "^7.68.0",
+    "@streamparser/json": "^0.0.20",
+    "@vscode/python-extension": "^1.0.2",
+    "axios": "^1.3.4",
+    "class-transformer": "^0.5.1",
+    "clsx": "^2.0.0",
+    "datadog-winston": "^1.6.0",
+    "event-source-polyfill": "^1.0.31",
+    "eventsource": "^2.0.2",
+    "fast-glob": "^3.2.12",
+    "feather-icons": "^4.29.1",
+    "form-data": "^4.0.0",
+    "framer-motion": "^11.5.6",
+    "highlight.js": "^11.8.0",
+    "html-to-text": "^9.0.5",
+    "ignore": "^5.2.4",
+    "json-fixer": "^1.6.15",
+    "jsonrepair": "^3.5.1",
+    "langchain": "^0.0.88",
+    "lodash": "^4.17.21",
+    "lowlight": "^2.9.0",
+    "marked": "^7.0.4",
+    "mixpanel": "^0.17.0",
+    "monaco-editor": "^0.39.0",
+    "monaco-editor-webpack-plugin": "^7.1.0",
+    "node-fetch": "^3.3.1",
+    "node-rsa": "^1.1.1",
+    "openai": "^3.2.1",
+    "openai-partial-stream": "^0.3.7",
+    "partial-json-parser": "^1.2.2",
+    "prism-react-renderer": "^2.0.6",
+    "prismjs": "^1.29.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-feather": "^2.0.10",
+    "react-highlight": "^0.15.0",
+    "react-icons": "^4.10.1",
+    "react-intersection-observer": "^9.14.0",
+    "react-markdown": "^8.0.7",
+    "react-monaco-editor": "^0.54.0",
+    "react-redux": "^8.1.2",
+    "react-router-dom": "^6.14.2",
+    "react-showdown": "^2.3.1",
+    "react-syntax-highlighter": "^15.5.0",
+    "react-virtualized": "^9.22.5",
+    "react-virtualized-auto-sizer": "^1.0.20",
+    "react-visibility-sensor": "^5.1.1",
+    "react-waypoint": "^10.3.0",
+    "react-window": "^1.8.9",
+    "reconnecting-eventsource": "^1.6.2",
+    "reflect-metadata": "^0.1.13",
+    "remark-gfm": "^3.0.1",
+    "tar": "^6.1.15",
+    "untruncate-json": "^0.0.1",
+    "upgrade": "^1.1.0",
+    "uuid": "^9.0.0",
+    "vscode-diff": "^2.1.1",
+    "winston-loggly-bulk": "^3.2.1",
+    "winston-logzio": "^5.1.7"
+  }
+}

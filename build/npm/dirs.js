@@ -10,6 +10,7 @@ const dirs = [
 	'',
 	'build',
 	'extensions',
+	'extensions/chatgpt-easycode',
 	'extensions/configuration-editing',
 	'extensions/css-language-features',
 	'extensions/css-language-features/server',
