@@ -260,6 +260,11 @@ function packageTask(platform, arch, sourceFolderName, destinationFolderName, op
 			.pipe(filter(['**', '!**/*.js.map'], { dot: true }));
 
 		let version = packageJson.version;
+
+		/// --- Start EasyCode AI ---
+		const easycodeAIVersion = product.easycodeAIVersion;
+		/// --- End EasyCode AI ---
+
 		const quality = product.quality;
 
 		if (quality && quality !== 'stable') {
@@ -283,7 +288,9 @@ function packageTask(platform, arch, sourceFolderName, destinationFolderName, op
 
 		let productJsonContents;
 		const productJsonStream = gulp.src(['product.json'], { base: '.' })
-			.pipe(json({ commit, date: readISODate('out-build'), checksums, version }))
+			/// --- Start EasyCode AI ---
+			.pipe(json({ commit, date: readISODate('out-build'), checksums, version, easycodeAIVersion }))
+			/// --- End EasyCode AI ---
 			.pipe(es.through(function (file) {
 				productJsonContents = file.contents.toString();
 				this.emit('data', file);
@@ -343,6 +350,9 @@ function packageTask(platform, arch, sourceFolderName, destinationFolderName, op
 				'resources/win32/csharp.ico',
 				'resources/win32/css.ico',
 				'resources/win32/default.ico',
+				/// --- Start EasyCode AI ---
+				'resources/win32/easycode-ai.ico',
+				/// --- End EasyCode AI ---
 				'resources/win32/go.ico',
 				'resources/win32/html.ico',
 				'resources/win32/jade.ico',
@@ -363,11 +373,15 @@ function packageTask(platform, arch, sourceFolderName, destinationFolderName, op
 				'resources/win32/vue.ico',
 				'resources/win32/xml.ico',
 				'resources/win32/yaml.ico',
-				'resources/win32/code_70x70.png',
-				'resources/win32/code_150x150.png'
+				/// --- Start EasyCode AI ---
+				'resources/win32/easycode-ai_70x70.png',
+				'resources/win32/easycode-ai_150x150.png'
+				/// --- End EasyCode AI ---
 			], { base: '.' }));
 		} else if (platform === 'linux') {
-			all = es.merge(all, gulp.src('resources/linux/code.png', { base: '.' }));
+			/// --- Start EasyCode AI ---
+			all = es.merge(all, gulp.src('resources/linux/easycode-ai.png', { base: '.' }));
+			/// --- End EasyCode AI ---
 		} else if (platform === 'darwin') {
 			const shortcut = gulp.src('resources/darwin/bin/code.sh')
 				.pipe(replace('@@APPNAME@@', product.applicationName))
@@ -436,6 +450,14 @@ function packageTask(platform, arch, sourceFolderName, destinationFolderName, op
 	};
 }
 
+/// --- Start EasyCode AI ---
+function updateIcon(cwd, executablePath, icon) {
+	return cb => {
+		rcedit(path.join(cwd, executablePath), { icon }, cb);
+	};
+}
+/// --- End EasyCode AI ---
+
 function patchWin32DependenciesTask(destinationFolderName) {
 	const cwd = path.join(path.dirname(root), destinationFolderName);
 
@@ -493,7 +515,14 @@ BUILD_TARGETS.forEach(buildTarget => {
 		];
 
 		if (platform === 'win32') {
-			tasks.push(patchWin32DependenciesTask(destinationFolderName));
+			/// --- Start EasyCode AI ---
+			const cwd = path.join(path.dirname(root), destinationFolderName);
+			tasks.push(patchWin32DependenciesTask(cwd));
+
+			const executablePath = `${product.nameShort}.exe`;
+			const iconPath = path.join(cwd, 'resources', 'app', 'resources', 'win32', 'easycode-ai.ico');
+			tasks.push(updateIcon(cwd, executablePath, iconPath));
+			/// --- End EasyCode AI ---
 		}
 
 		const vscodeTaskCI = task.define(`vscode${dashed(platform)}${dashed(arch)}${dashed(minified)}-ci`, task.series(...tasks));

@@ -54,19 +54,23 @@ function prepareDebPackage(arch) {
 			.pipe(replace('@@ICON@@', product.linuxIconName))
 			.pipe(replace('@@URLPROTOCOL@@', product.urlProtocol));
 
-		const appdata = gulp.src('resources/linux/code.appdata.xml', { base: '.' })
+		/// --- Start EasyCode AI ---
+		const appdata = gulp.src('resources/linux/easycode-ai.appdata.xml', { base: '.' })
 			.pipe(replace('@@NAME_LONG@@', product.nameLong))
 			.pipe(replace('@@NAME@@', product.applicationName))
 			.pipe(replace('@@LICENSE@@', product.licenseName))
 			.pipe(rename('usr/share/appdata/' + product.applicationName + '.appdata.xml'));
+		/// --- End EasyCode AI ---
 
 		const workspaceMime = gulp.src('resources/linux/code-workspace.xml', { base: '.' })
 			.pipe(replace('@@NAME_LONG@@', product.nameLong))
 			.pipe(replace('@@NAME@@', product.applicationName))
 			.pipe(rename('usr/share/mime/packages/' + product.applicationName + '-workspace.xml'));
 
-		const icon = gulp.src('resources/linux/code.png', { base: '.' })
+		/// --- Start EasyCode AI ---
+		const icon = gulp.src('resources/linux/easycode-ai.png', { base: '.' })
 			.pipe(rename('usr/share/pixmaps/' + product.linuxIconName + '.png'));
+		/// --- End EasyCode AI ---
 
 		const bash_completion = gulp.src('resources/completions/bash/code')
 			.pipe(replace('@@APPNAME@@', product.applicationName))
@@ -85,9 +89,15 @@ function prepareDebPackage(arch) {
 			async function () {
 				const that = this;
 				const dependencies = await dependenciesGenerator.getDependencies('deb', binaryDir, product.applicationName, debArch);
-				gulp.src('resources/linux/debian/control.template', { base: '.' })
+				/// --- Start EasyCode AI ---
+				//gulp.src('resources/linux/debian/control.template', { base: '.' })
+				gulp.src('resources/linux/debian/easycode-ai.control.template', { base: '.' })
+					/// --- End EasyCode AI ---
 					.pipe(replace('@@NAME@@', product.applicationName))
-					.pipe(replace('@@VERSION@@', packageJson.version + '-' + linuxPackageRevision))
+					/// --- Start EasyCode AI ---
+					.pipe(replace('@@VERSION@@', packageJson.version))
+					.pipe(replace('@@EasyCodeAIVERSION@@', product.easycodeAIVersion + '-' + linuxPackageRevision))
+					/// --- End EasyCode AI ---
 					.pipe(replace('@@ARCHITECTURE@@', debArch))
 					.pipe(replace('@@DEPENDS@@', dependencies.join(', ')))
 					.pipe(replace('@@RECOMMENDS@@', debianRecommendedDependencies.join(', ')))
@@ -169,19 +179,23 @@ function prepareRpmPackage(arch) {
 			.pipe(replace('@@ICON@@', product.linuxIconName))
 			.pipe(replace('@@URLPROTOCOL@@', product.urlProtocol));
 
-		const appdata = gulp.src('resources/linux/code.appdata.xml', { base: '.' })
+		/// --- Start EasyCode AI ---
+		const appdata = gulp.src('resources/linux/easycode-ai.appdata.xml', { base: '.' })
 			.pipe(replace('@@NAME_LONG@@', product.nameLong))
 			.pipe(replace('@@NAME@@', product.applicationName))
 			.pipe(replace('@@LICENSE@@', product.licenseName))
 			.pipe(rename('BUILD/usr/share/appdata/' + product.applicationName + '.appdata.xml'));
+		/// --- End EasyCode AI ---
 
 		const workspaceMime = gulp.src('resources/linux/code-workspace.xml', { base: '.' })
 			.pipe(replace('@@NAME_LONG@@', product.nameLong))
 			.pipe(replace('@@NAME@@', product.applicationName))
 			.pipe(rename('BUILD/usr/share/mime/packages/' + product.applicationName + '-workspace.xml'));
 
-		const icon = gulp.src('resources/linux/code.png', { base: '.' })
+		/// --- Start EasyCode AI ---
+		const icon = gulp.src('resources/linux/easycode-ai.png', { base: '.' })
 			.pipe(rename('BUILD/usr/share/pixmaps/' + product.linuxIconName + '.png'));
+		/// --- End EasyCode AI ---
 
 		const bash_completion = gulp.src('resources/completions/bash/code')
 			.pipe(replace('@@APPNAME@@', product.applicationName))
@@ -194,15 +208,21 @@ function prepareRpmPackage(arch) {
 		const code = gulp.src(binaryDir + '/**/*', { base: binaryDir })
 			.pipe(rename(function (p) { p.dirname = 'BUILD/usr/share/' + product.applicationName + '/' + p.dirname; }));
 
+
 		const spec = code.pipe(es.through(
 			async function () {
 				const that = this;
 				const dependencies = await dependenciesGenerator.getDependencies('rpm', binaryDir, product.applicationName, rpmArch);
-				gulp.src('resources/linux/rpm/code.spec.template', { base: '.' })
+				/// --- Start EasyCode AI ---
+				gulp.src('resources/linux/rpm/easycode-ai.spec.template', { base: '.' })
+					/// --- End EasyCode AI ---
 					.pipe(replace('@@NAME@@', product.applicationName))
 					.pipe(replace('@@NAME_LONG@@', product.nameLong))
 					.pipe(replace('@@ICON@@', product.linuxIconName))
+					/// --- Start EasyCode AI ---
 					.pipe(replace('@@VERSION@@', packageJson.version))
+					.pipe(replace('@@EasyCodeAIVERSION@@', product.easycodeAIVersion + '-' + linuxPackageRevision))
+					/// --- End EasyCode AI ---
 					.pipe(replace('@@RELEASE@@', linuxPackageRevision))
 					.pipe(replace('@@ARCHITECTURE@@', rpmArch))
 					.pipe(replace('@@LICENSE@@', product.licenseName))
@@ -270,16 +290,21 @@ function prepareSnapPackage(arch) {
 			.pipe(replace('@@ICON@@', `\${SNAP}/meta/gui/${product.linuxIconName}.png`))
 			.pipe(replace('@@URLPROTOCOL@@', product.urlProtocol));
 
+		/// --- Start EasyCode AI ---
 		// An icon that is placed in snap/gui will be placed into meta/gui verbatim.
-		const icon = gulp.src('resources/linux/code.png', { base: '.' })
+		const icon = gulp.src('resources/linux/easycode-ai.png', { base: '.' })
 			.pipe(rename(`snap/gui/${product.linuxIconName}.png`));
+		/// --- End EasyCode AI ---
 
 		const code = gulp.src(binaryDir + '/**/*', { base: binaryDir })
 			.pipe(rename(function (p) { p.dirname = `usr/share/${product.applicationName}/${p.dirname}`; }));
 
 		const snapcraft = gulp.src('resources/linux/snap/snapcraft.yaml', { base: '.' })
 			.pipe(replace('@@NAME@@', product.applicationName))
-			.pipe(replace('@@VERSION@@', commit.substr(0, 8)))
+			/// --- Start EasyCode AI ---
+			.pipe(replace('@@VERSION@@', packageJson.version))
+			.pipe(replace('@@EasyCodeAIVERSION@@', product.easycodeAIVersion))
+			// --- End EasyCode AI ---
 			// Possible run-on values https://snapcraft.io/docs/architectures
 			.pipe(replace('@@ARCHITECTURE@@', arch === 'x64' ? 'amd64' : arch))
 			.pipe(rename('snap/snapcraft.yaml'));

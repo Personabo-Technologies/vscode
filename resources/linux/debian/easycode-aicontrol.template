@@ -1,0 +1,15 @@
+Package: @@NAME@@
+Version: @@EasyCodeAIVERSION@@
+Section: devel
+Depends: @@DEPENDS@@
+Recommends: @@RECOMMENDS@@
+Priority: optional
+Architecture: @@ARCHITECTURE@@
+Maintainer: EasyCode AI <support@easycode.ai>
+Homepage: https://www.easycode.ai/
+Installed-Size: @@INSTALLEDSIZE@@
+Provides: easycode-ai-@@NAME@@
+Conflicts: easycode-ai-@@NAME@@
+Replaces: easycode-ai-@@NAME@@
+Description: A smart Code IDE.
+ We focus on the developer experience and help them solve problems quickly.

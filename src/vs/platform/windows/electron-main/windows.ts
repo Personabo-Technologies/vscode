@@ -155,11 +155,13 @@ export function defaultBrowserWindowOptions(accessor: ServicesAccessor, windowSt
 		experimentalDarkMode: true
 	};
 
+	/// --- Start EasyCode AI ---
 	if (isLinux) {
-		options.icon = join(environmentMainService.appRoot, 'resources/linux/code.png'); // always on Linux
+		options.icon = join(environmentMainService.appRoot, 'resources/linux/easycode-ai.png'); // always on Linux
 	} else if (isWindows && !environmentMainService.isBuilt) {
-		options.icon = join(environmentMainService.appRoot, 'resources/win32/code_150x150.png'); // only when running out of sources on Windows
+		options.icon = join(environmentMainService.appRoot, 'resources/win32/easycode-ai_150x150.png'); // only when running out of sources on Windows
 	}
+	/// --- End EasyCode AI ---
 
 	if (isMacintosh) {
 		options.acceptFirstMouse = true; // enabled by default

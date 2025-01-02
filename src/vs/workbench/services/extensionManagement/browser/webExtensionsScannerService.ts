@@ -44,6 +44,10 @@ import { IUserDataProfileService } from '../../userDataProfile/common/userDataPr
 import { IUserDataProfilesService } from '../../../../platform/userDataProfile/common/userDataProfile.js';
 import { IUriIdentityService } from '../../../../platform/uriIdentity/common/uriIdentity.js';
 
+/// --- Start EasyCode AI ---
+import { validateEasyCodeAIExtensionManifest } from '../../../../platform/extensions/common/easycodeAIExtensionValidator.js';
+/// --- End EasyCode AI ---
+
 type GalleryExtensionInfo = { readonly id: string; preRelease?: boolean; migrateStorageFrom?: string };
 type ExtensionInfo = { readonly id: string; preRelease: boolean };
 
@@ -770,6 +774,9 @@ export class WebExtensionsScannerService extends Disposable implements IWebExten
 
 		const validateApiVersion = this.extensionsEnabledWithApiProposalVersion.includes(webExtension.identifier.id.toLowerCase());
 		validations.push(...validateExtensionManifest(this.productService.version, this.productService.date, webExtension.location, manifest, false, validateApiVersion));
+		/// --- Start EasyCode AI ---
+		validations.push(...validateEasyCodeAIExtensionManifest(this.productService.easycodeAIVersion, this.productService.date, webExtension.location, manifest, false));
+		/// --- End EasyCode AI ---
 		let isValid = true;
 		for (const [severity, message] of validations) {
 			if (severity === Severity.Error) {

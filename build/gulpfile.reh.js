@@ -298,6 +298,10 @@ function packageTask(type, platform, arch, sourceFolderName, destinationFolderNa
 			.pipe(filter(['**', '!**/*.js.map'], { dot: true }));
 
 		let version = packageJson.version;
+		/// --- Start EasyCode AI ---
+		const easycodeAIVersion = product.easycodeAIVersion;
+		/// --- End EasyCode AI ---
+
 		const quality = product.quality;
 
 		if (quality && quality !== 'stable') {
@@ -316,7 +320,9 @@ function packageTask(type, platform, arch, sourceFolderName, destinationFolderNa
 
 		let productJsonContents;
 		const productJsonStream = gulp.src(['product.json'], { base: '.' })
-			.pipe(json({ commit, date: readISODate('out-build'), version }))
+			/// --- Start EasyCode AI ---
+			.pipe(json({ commit, date: readISODate('out-build'), version, easycodeAIVersion }))
+			/// --- End EasyCode AI ---
 			.pipe(es.through(function (file) {
 				productJsonContents = file.contents.toString();
 				this.emit('data', file);
@@ -344,8 +350,10 @@ function packageTask(type, platform, arch, sourceFolderName, destinationFolderNa
 		if (type === 'reh-web') {
 			web = [
 				'resources/server/favicon.ico',
-				'resources/server/code-192.png',
-				'resources/server/code-512.png',
+				/// --- Start EasyCode AI ---
+				'resources/server/easycode-ai-192.png',
+				'resources/server/easycode-ai-512.png',
+				/// --- End EasyCode AI ---
 				'resources/server/manifest.json'
 			].map(resource => gulp.src(resource, { base: '.' }).pipe(rename(resource)));
 		}
@@ -368,11 +376,17 @@ function packageTask(type, platform, arch, sourceFolderName, destinationFolderNa
 			result = es.merge(result,
 				gulp.src('resources/server/bin/remote-cli/code.cmd', { base: '.' })
 					.pipe(replace('@@VERSION@@', version))
+					/// --- Start EasyCode AI ---
+					.pipe(replace('@@EasyCodeAIVERSION@@', easycodeAIVersion))
+					/// --- End EasyCode AI ---
 					.pipe(replace('@@COMMIT@@', commit))
 					.pipe(replace('@@APPNAME@@', product.applicationName))
 					.pipe(rename(`bin/remote-cli/${product.applicationName}.cmd`)),
 				gulp.src('resources/server/bin/helpers/browser.cmd', { base: '.' })
 					.pipe(replace('@@VERSION@@', version))
+					/// --- Start EasyCode AI ---
+					.pipe(replace('@@EasyCodeAIVERSION@@', easycodeAIVersion))
+					/// --- End EasyCode AI ---
 					.pipe(replace('@@COMMIT@@', commit))
 					.pipe(replace('@@APPNAME@@', product.applicationName))
 					.pipe(rename(`bin/helpers/browser.cmd`)),
@@ -383,12 +397,18 @@ function packageTask(type, platform, arch, sourceFolderName, destinationFolderNa
 			result = es.merge(result,
 				gulp.src(`resources/server/bin/remote-cli/${platform === 'darwin' ? 'code-darwin.sh' : 'code-linux.sh'}`, { base: '.' })
 					.pipe(replace('@@VERSION@@', version))
+					/// --- Start EasyCode AI ---
+					.pipe(replace('@@EasyCodeAIVERSION@@', easycodeAIVersion))
+					/// --- End EasyCode AI ---
 					.pipe(replace('@@COMMIT@@', commit))
 					.pipe(replace('@@APPNAME@@', product.applicationName))
 					.pipe(rename(`bin/remote-cli/${product.applicationName}`))
 					.pipe(util.setExecutableBit()),
 				gulp.src(`resources/server/bin/helpers/${platform === 'darwin' ? 'browser-darwin.sh' : 'browser-linux.sh'}`, { base: '.' })
 					.pipe(replace('@@VERSION@@', version))
+					/// --- Start EasyCode AI ---
+					.pipe(replace('@@EasyCodeAIVERSION@@', easycodeAIVersion))
+					/// --- End EasyCode AI ---
 					.pipe(replace('@@COMMIT@@', commit))
 					.pipe(replace('@@APPNAME@@', product.applicationName))
 					.pipe(rename(`bin/helpers/browser.sh`))

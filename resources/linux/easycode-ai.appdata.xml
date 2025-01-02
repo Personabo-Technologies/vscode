@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop">
+	<id>@@NAME@@.desktop</id>
+	<metadata_license>@@LICENSE@@</metadata_license>
+	<project_license>@@LICENSE@@</project_license>
+	<name>@@NAME_LONG@@</name>
+	<url type="homepage">https://www.easycode.ai</url>
+	<summary>Unblock developers by answering their questions instantly.</summary>
+	<description>
+		<p>EasyCode AI is the smart Code IDE, we focus on the developer experience and help them solve problems quickly.</p>
+	</description>
+	<screenshots>
+		<screenshot type="default">
+			<image>https://storage.googleapis.com/easycode-assets/askCodebase.gif</image>
+			<caption>Understands your codebase.</caption>
+		</screenshot>
+	</screenshots>
+</component>

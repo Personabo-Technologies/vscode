@@ -27,16 +27,18 @@ function hygiene(some, linting = true) {
 
 	let errorCount = 0;
 
+	/// Start --- EasyCode AI ---
 	const productJson = es.through(function (file) {
 		const product = JSON.parse(file.contents.toString('utf8'));
 
-		if (product.extensionsGallery) {
-			console.error(`product.json: Contains 'extensionsGallery'`);
-			errorCount++;
-		}
+		// if (product.extensionsGallery) {
+		// 	console.error(`product.json: Contains 'extensionsGallery'`);
+		// 	errorCount++;
+		// }
 
 		this.emit('data', file);
 	});
+	/// End --- EasyCode AI ---
 
 	const unicode = es.through(function (file) {
 		const lines = file.contents.toString('utf8').split(/\r\n|\r|\n/);
@@ -98,16 +100,18 @@ function hygiene(some, linting = true) {
 	});
 
 	const copyrights = es.through(function (file) {
-		const lines = file.__lines;
+		/// --- Start EasyCode AI ---
+		// DO NOT check the copyright
+		// const lines = file.__lines;
 
-		for (let i = 0; i < copyrightHeaderLines.length; i++) {
-			if (lines[i] !== copyrightHeaderLines[i]) {
-				console.error(file.relative + ': Missing or bad copyright statement');
-				errorCount++;
-				break;
-			}
-		}
-
+		// for (let i = 0; i < copyrightHeaderLines.length; i++) {
+		// 	if (lines[i] !== copyrightHeaderLines[i]) {
+		// 		console.error(file.relative + ': Missing or bad copyright statement');
+		// 		errorCount++;
+		// 		break;
+		// 	}
+		// }
+		/// --- End EasyCode AI ---
 		this.emit('data', file);
 	});
 

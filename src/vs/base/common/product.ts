@@ -55,7 +55,13 @@ export type ExtensionVirtualWorkspaceSupport = {
 };
 
 export interface IProductConfiguration {
+	// --- Start EasyCode AI ---
+	/** The base version: underlying Code - OSS version */
 	readonly version: string;
+
+	/** The 3-part EasyCode AI (overlay) version, in 0.0.0 format */
+	readonly easycodeAIVersion: string;
+	// --- End EasyCode AI ---
 	readonly date?: string;
 	readonly quality?: string;
 	readonly commit?: string;

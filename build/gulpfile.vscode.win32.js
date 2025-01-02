@@ -20,7 +20,9 @@ const rcedit = require('rcedit');
 const repoPath = path.dirname(__dirname);
 const buildPath = (/** @type {string} */ arch) => path.join(path.dirname(repoPath), `VSCode-win32-${arch}`);
 const setupDir = (/** @type {string} */ arch, /** @type {string} */ target) => path.join(repoPath, '.build', `win32-${arch}`, `${target}-setup`);
-const issPath = path.join(__dirname, 'win32', 'code.iss');
+/// --- Start EasyCode AI ---
+const issPath = path.join(__dirname, 'win32', 'easycode-ai.iss');
+/// --- End EasyCode AI ---
 const innoSetupPath = path.join(path.dirname(path.dirname(require.resolve('innosetup'))), 'bin', 'ISCC.exe');
 const signWin32Path = path.join(repoPath, 'build', 'azure-pipelines', 'common', 'sign-win32');
 
@@ -87,7 +89,9 @@ function buildWin32Setup(arch, target) {
 			NameLong: product.nameLong,
 			NameShort: product.nameShort,
 			DirName: product.win32DirName,
-			Version: pkg.version,
+			/// --- Start EasyCode AI ---
+			Version: product.easycodeAIVersion,
+			/// --- End EasyCode AI ---
 			RawVersion: pkg.version.replace(/-\w+$/, ''),
 			NameVersion: product.win32NameVersion + (target === 'user' ? ' (User)' : ''),
 			ExeBasename: product.nameShort,
@@ -150,7 +154,9 @@ function copyInnoUpdater(arch) {
  */
 function updateIcon(executablePath) {
 	return cb => {
-		const icon = path.join(repoPath, 'resources', 'win32', 'code.ico');
+		/// --- Start EasyCode AI ---
+		const icon = path.join(repoPath, 'resources', 'win32', 'easycode-ai.ico');
+		/// --- End EasyCode AI ---
 		rcedit(executablePath, { icon }, cb);
 	};
 }

@@ -253,7 +253,12 @@ export interface IRelaxedExtensionManifest {
 	displayName?: string;
 	publisher: string;
 	version: string;
-	engines: { readonly vscode: string };
+	/// --- Start EasyCode AI ---
+	engines: {
+		readonly vscode: string;
+		readonly easycodeAI?: string;
+	};
+	/// --- End EasyCode AI ---
 	description?: string;
 	main?: string;
 	browser?: string;

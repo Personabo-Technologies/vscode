@@ -59,15 +59,18 @@ else {
 	if (Object.keys(product).length === 0) {
 		Object.assign(product, {
 			version: '1.95.0-dev',
-			nameShort: 'Code - OSS Dev',
-			nameLong: 'Code - OSS Dev',
-			applicationName: 'code-oss',
-			dataFolderName: '.vscode-oss',
-			urlProtocol: 'code-oss',
-			reportIssueUrl: 'https://github.com/microsoft/vscode/issues/new',
+			/// --- Start EasyCode AI ---
+			easycodeAIVersion: '0.1.0',
+			nameShort: 'EasyCode AI',
+			nameLong: 'EasyCode AI',
+			applicationName: 'easycode-ai',
+			dataFolderName: '.easycode-ai',
+			urlProtocol: 'easycode-ai',
+			reportIssueUrl: 'https://discord.gg/y9hhTK95PD',
 			licenseName: 'MIT',
 			licenseUrl: 'https://github.com/microsoft/vscode/blob/main/LICENSE.txt',
 			serverLicenseUrl: 'https://github.com/microsoft/vscode/blob/main/LICENSE.txt'
+			/// --- End EasyCode AI ---
 		});
 	}
 }

@@ -28,6 +28,9 @@ const ext = require('./lib/extensions');
 // 	ignore: ['**/out/**', '**/node_modules/**']
 // });
 const compilations = [
+	/// --- Start EasyCode AI ---
+	'extensions/open-remote-ssh/tsconfig.json',
+	/// --- End EasyCode AI ---
 	'extensions/configuration-editing/tsconfig.json',
 	'extensions/css-language-features/client/tsconfig.json',
 	'extensions/css-language-features/server/tsconfig.json',

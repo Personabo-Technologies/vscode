@@ -31,6 +31,10 @@ const commit = getVersion(REPO_ROOT);
 const quality = product.quality;
 const version = (quality && quality !== 'stable') ? `${packageJson.version}-${quality}` : packageJson.version;
 
+/// --- Start EasyCode AI ---
+const easycodeAIVersion = (quality && quality !== 'stable') ? `${product.easycodeAIVersion}-${quality}` : product.easycodeAIVersion;
+/// --- End EasyCode AI ---
+
 const vscodeWebResourceIncludes = [
 
 	// NLS
@@ -177,10 +181,12 @@ function packageTask(sourceFolderName, destinationFolderName) {
 
 		const favicon = gulp.src('resources/server/favicon.ico', { base: 'resources/server' });
 		const manifest = gulp.src('resources/server/manifest.json', { base: 'resources/server' });
+		/// --- Start EasyCode AI ---
 		const pwaicons = es.merge(
-			gulp.src('resources/server/code-192.png', { base: 'resources/server' }),
-			gulp.src('resources/server/code-512.png', { base: 'resources/server' })
+			gulp.src('resources/server/easycode-ai-192.png', { base: 'resources/server' }),
+			gulp.src('resources/server/easycode-ai-512.png', { base: 'resources/server' })
 		);
+		/// --- End EasyCode AI ---
 
 		const all = es.merge(
 			packageJsonStream,

@@ -1,3 +1,55 @@
+# EasyCode AI
+
+An intelligent coding IDE based on [Visual Stuio Code](https://github.com/microsoft/vscode).
+
+## Getting Started
+
+```shell
+git clone https://github.com/Personabo-Technologies/vscode.git ~/projects/easycode-ai-ide
+cd easycode-ai-ide
+```
+
+## Build
+
+[How to Contribute](https://github.com/microsoft/vscode/wiki/How-to-Contribute) explains in detail how to do a build.
+
+Of course as a simpler way, you can follow these steps.
+
+```shell
+cd ~/projects/easycode-ai-ide
+# Install libs
+npm install
+# Compile
+npm run watch
+```
+
+## Start Sandbox
+
+### Start in VS Code
+
+```shell
+cd ~/projects/easycode-ai-ide
+code .
+```
+
+Open Run and Debug, select EasyCode AI and start it.
+
+### Start it in a terminal
+
+```shell
+cd ~/projects/easycode-ai-ide
+./scripts/code.sh
+```
+
+## How to publish
+
+[BUILD.md](./BUILD.md) lists common commands to build installers for different platforms and for Server.
+
+**It is important to note that the Server must be built before the installer is released. Also, once the Server is released, it cannot be changed from the current version. If it is necessary to make changes, you need to build Server again. the main purpose of this is to make sure that both the installer and Server have the same commit hash, because when establishing an SSH connection, the commit hash will be verified, and if it is not the same, then you will not be able to connect to remote SSH.**
+
+
+---
+
 # Visual Studio Code - Open Source ("Code - OSS")
 
 [![Feature Requests](https://img.shields.io/github/issues/microsoft/vscode/feature-request.svg)](https://github.com/microsoft/vscode/issues?q=is%3Aopen+is%3Aissue+label%3Afeature-request+sort%3Areactions-%2B1-desc)

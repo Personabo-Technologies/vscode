@@ -26,6 +26,13 @@ module.exports.all = [
 	'!out*/**',
 	'!test/**/out/**',
 	'!**/node_modules/**',
+	/// --- Start EasyCode AI ---
+
+	// Excluded since it comes from an external source with its own hygiene
+	// rules
+	'!extensions/open-remote-ssh/**/*',
+
+	/// --- End EasyCode AI ---
 ];
 
 module.exports.unicodeFilter = [

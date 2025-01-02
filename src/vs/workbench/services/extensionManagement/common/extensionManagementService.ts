@@ -864,6 +864,10 @@ export class ExtensionManagementService extends Disposable implements IWorkbench
 	installExtensionsFromProfile(extensions: IExtensionIdentifier[], fromProfileLocation: URI, toProfileLocation: URI): Promise<ILocalExtension[]> { throw new Error('Not Supported'); }
 }
 
+/// --- Start EasyCode AI ---
+
+/// --- End EasyCode AI ---
+
 class WorkspaceExtensionsManagementService extends Disposable {
 
 	private static readonly WORKSPACE_EXTENSIONS_KEY = 'workspaceExtensions.locations';

@@ -208,6 +208,9 @@ export class RemoteExtensionHost extends Disposable implements IExtensionHost {
 		return {
 			commit: this._productService.commit,
 			version: this._productService.version,
+			/// --- Start EasyCode AI ---
+			easycodeAIVersion: this._productService.easycodeAIVersion,
+			/// --- End EasyCode AI ---
 			quality: this._productService.quality,
 			parentPid: remoteInitData.pid,
 			environment: {

@@ -45,6 +45,12 @@ import { ILoggerMainService } from '../../log/electron-main/loggerService.js';
 import { IInstantiationService } from '../../instantiation/common/instantiation.js';
 import { VSBuffer } from '../../../base/common/buffer.js';
 
+/// --- Start EasyCode AI ---
+// eslint-disable-next-line no-duplicate-imports
+import { isLinux } from '../../../base/common/platform.js';
+import { join } from '../../../base/common/path.js';
+/// -- End EasyCode AI ---
+
 export interface IWindowCreationOptions {
 	readonly state: IWindowState;
 	readonly extensionDevelopmentPath?: string[];
@@ -609,6 +615,14 @@ export class CodeWindow extends BaseWindow implements ICodeWindow {
 				additionalArguments: [`--vscode-window-config=${this.configObjectUrl.resource.toString()}`],
 				v8CacheOptions: this.environmentMainService.useCodeCache ? 'bypassHeatCheck' : 'none',
 			});
+
+			/// --- Start EasyCode AI ---
+			if (isLinux) {
+				options.icon = join(this.environmentMainService.appRoot, 'resources/linux/easycode-ai.png');
+			} else if (isWindows && !this.environmentMainService.isBuilt) {
+				options.icon = join(this.environmentMainService.appRoot, 'resources/win32/easycode-ai_150x150.png');
+			}
+			/// --- End EasyCode AI ---
 
 			// Create the browser window
 			mark('code/willCreateCodeBrowserWindow');

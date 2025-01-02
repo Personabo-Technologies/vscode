@@ -10,6 +10,9 @@ const dirs = [
 	'',
 	'build',
 	'extensions',
+	/// --- Start EasyCode AI ---
+	'extensions/open-remote-ssh',
+	/// --- End EasyCode AI ---
 	'extensions/configuration-editing',
 	'extensions/css-language-features',
 	'extensions/css-language-features/server',

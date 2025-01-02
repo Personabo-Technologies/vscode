@@ -27,6 +27,9 @@ export interface IExtensionDescriptionDelta {
 
 export interface IExtensionHostInitData {
 	version: string;
+	/// --- Start EasyCode AI ---
+	easycodeAIVersion: string;
+	/// --- End EasyCode AI ---
 	quality: string | undefined;
 	commit?: string;
 	/**

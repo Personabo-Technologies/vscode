@@ -103,9 +103,11 @@ export const config = {
 	version: electronVersion,
 	tag: product.electronRepository ? `v${electronVersion}-${msBuildId}` : undefined,
 	productAppName: product.nameLong,
-	companyName: 'Microsoft Corporation',
-	copyright: 'Copyright (C) 2024 Microsoft. All rights reserved',
-	darwinIcon: 'resources/darwin/code.icns',
+	/// --- Start EasyCode AI ---
+	companyName: 'EasyCode AI',
+	copyright: 'Copyright (C) 2024 EasyCode. All rights reserved',
+	darwinIcon: 'resources/darwin/easycode-ai.icns',
+	/// --- End EasyCode AI ---
 	darwinBundleIdentifier: product.darwinBundleIdentifier,
 	darwinApplicationCategoryType: 'public.app-category.developer-tools',
 	darwinHelpBookFolder: 'VS Code HelpBook',
@@ -196,7 +198,9 @@ export const config = {
 	darwinForceDarkModeSupport: true,
 	darwinCredits: darwinCreditsTemplate ? Buffer.from(darwinCreditsTemplate({ commit: commit, date: new Date().toISOString() })) : undefined,
 	linuxExecutableName: product.applicationName,
-	winIcon: 'resources/win32/code.ico',
+	/// --- Start EasyCode AI ---
+	winIcon: 'resources/win32/easycode-ai.ico',
+	/// --- End EasyCode AI ---
 	token: process.env['GITHUB_TOKEN'],
 	repo: product.electronRepository || undefined,
 	validateChecksum: true,

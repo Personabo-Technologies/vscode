@@ -292,6 +292,9 @@ export class WebWorkerExtensionHost extends Disposable implements IExtensionHost
 		}
 		return {
 			commit: this._productService.commit,
+			/// --- Start EasyCode AI ---
+			easycodeAIVersion: this._productService.easycodeAIVersion,
+			/// --- End EasyCode AI ---
 			version: this._productService.version,
 			quality: this._productService.quality,
 			parentPid: 0,
