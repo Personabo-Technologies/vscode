@@ -1,0 +1,229 @@
+name: Build EasyCode AI
+
+on:
+  push:
+    branches: [ easycode-ai-prod ]
+  workflow_dispatch:
+
+env:
+  VSCODE_QUALITY: stable
+  NPM_REGISTRY: 'https://registry.npmjs.org'
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  build-macOS:
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        arch: [arm64, x64]
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          registry-url: ${{ env.NPM_REGISTRY }}
+
+      - name: Get npm cache directory
+        id: npm-cache
+        run: echo "::set-output name=dir::$(npm config get cache)"
+
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.npm-cache.outputs.dir }}
+          key: ${{ runner.os }}-${{ matrix.arch }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.arch }}-node-
+
+      - name: Install dependencies
+        run: npm ci
+        env:
+          npm_config_arch: ${{ matrix.arch }}
+          ELECTRON_SKIP_BINARY_DOWNLOAD: 1
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+
+      - name: Build macOS
+        run: npm run gulp vscode-darwin-${{ matrix.arch }}
+        env:
+          VSCODE_ARCH: ${{ matrix.arch }}
+
+      - name: Create Universal Binary
+        if: ${{ always() && matrix.arch == 'x64' }}
+        run: |
+          mkdir -p dist/macos-universal
+          node build/darwin/create-universal-app.js
+
+      - name: Upload macOS artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: macos-${{ matrix.arch }}
+          path: |
+            .build/darwin/*.zip
+            dist/macos-universal/*
+          if-no-files-found: error
+
+  build-windows:
+    runs-on: windows-latest
+    env:
+      VSCODE_ARCH: x64
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          registry-url: ${{ env.NPM_REGISTRY }}
+
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: ~\AppData\Roaming\npm-cache
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm ci
+        env:
+          npm_config_arch: ${{ env.VSCODE_ARCH }}
+          ELECTRON_SKIP_BINARY_DOWNLOAD: 1
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+
+      - name: Build Windows
+        run: |
+          npm run gulp vscode-win32-${{ env.VSCODE_ARCH }}
+          npm run gulp vscode-win32-${{ env.VSCODE_ARCH }}-system-setup
+          npm run gulp vscode-win32-${{ env.VSCODE_ARCH }}-user-setup
+
+      - name: Upload Windows artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: windows-${{ env.VSCODE_ARCH }}
+          path: |
+            .build/win32-${{ env.VSCODE_ARCH }}/system-setup/*.exe
+            .build/win32-${{ env.VSCODE_ARCH }}/user-setup/*.exe
+          if-no-files-found: error
+
+  build-linux:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        arch: [x64, arm64]
+        include:
+          - arch: x64
+            pkg_arch: amd64
+          - arch: arm64
+            pkg_arch: arm64
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          registry-url: ${{ env.NPM_REGISTRY }}
+
+      - name: Install Linux dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential libkrb5-dev python3 python3-pip libx11-dev libxkbfile-dev libsecret-1-dev pkg-config make g++ gcc python3-dev libxss1 dbus xvfb libgtk-3-0 libgbm1 rpm
+
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-${{ matrix.arch }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.arch }}-node-
+
+      - name: Install dependencies
+        run: npm ci
+        env:
+          npm_config_arch: ${{ matrix.arch }}
+          ELECTRON_SKIP_BINARY_DOWNLOAD: 1
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+
+      - name: Build Linux
+        run: |
+          npm run gulp vscode-linux-${{ matrix.arch }}
+        env:
+          VSCODE_ARCH: ${{ matrix.arch }}
+
+      - name: Create Linux packages
+        run: |
+          npm run gulp "vscode-linux-${{ matrix.arch }}-prepare-deb"
+          npm run gulp "vscode-linux-${{ matrix.arch }}-build-deb"
+          npm run gulp "vscode-linux-${{ matrix.arch }}-prepare-rpm"
+          npm run gulp "vscode-linux-${{ matrix.arch }}-build-rpm"
+        env:
+          VSCODE_ARCH: ${{ matrix.arch }}
+
+      - name: Upload Linux artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: linux-${{ matrix.arch }}
+          path: |
+            .build/linux/deb/*/deb/*.deb
+            .build/linux/rpm/*/*.rpm
+          if-no-files-found: error
+
+  build-linux-server:
+    runs-on: ubuntu-latest
+    env:
+      VSCODE_ARCH: x64
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          registry-url: ${{ env.NPM_REGISTRY }}
+
+      - name: Install Linux dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential libkrb5-dev python3 python3-pip libx11-dev libxkbfile-dev libsecret-1-dev pkg-config make g++ gcc python3-dev
+
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-server-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-server-node-
+
+      - name: Install dependencies
+        run: npm ci
+        env:
+          npm_config_arch: ${{ env.VSCODE_ARCH }}
+          ELECTRON_SKIP_BINARY_DOWNLOAD: 1
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+
+      - name: Build Linux Server
+        run: |
+          npm run gulp vscode-reh-linux-${{ env.VSCODE_ARCH }}
+          mkdir -p dist/server
+          tar -czf dist/server/vscode-reh-linux-${{ env.VSCODE_ARCH }}.tar.gz ../vscode-reh-linux-${{ env.VSCODE_ARCH }}
+
+      - name: Upload Server artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: linux-${{ env.VSCODE_ARCH }}-server
+          path: dist/server/vscode-reh-linux-${{ env.VSCODE_ARCH }}.tar.gz
+          if-no-files-found: error
